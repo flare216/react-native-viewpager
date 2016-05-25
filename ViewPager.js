@@ -1,16 +1,17 @@
 'use strict';
 
-var React = require('react-native');
-var {
+import React, {
+  PropTypes
+} from 'react';
+import {
   Dimensions,
   Text,
   View,
   TouchableOpacity,
   PanResponder,
   Animated,
-  PropTypes,
   StyleSheet,
-} = React;
+} from 'react-native';
 
 var StaticRenderer = require('react-native/Libraries/Components/StaticRenderer');
 var TimerMixin = require('react-timer-mixin');
@@ -60,14 +61,14 @@ var ViewPager = React.createClass({
 
   getInitialState() {
     return {
-      currentPage: 0,
+      currentPage: this.props.pageIndex || 0,
       viewWidth: 0,
-      scrollValue: new Animated.Value(0)
+      scrollValue: new Animated.Value(this.props.pageIndex ? (this.props.pageIndex > 0 ? 1 : 0) : 0)
     };
   },
 
   componentWillMount() {
-    this.childIndex = 0;
+    this.childIndex = this.props.pageIndex ? (this.props.pageIndex > 0 ? 1 : 0) : 0;
 
     var release = (e, gestureState) => {
       var relativeGestureDistance = gestureState.dx / deviceWidth,
@@ -286,7 +287,8 @@ var ViewPager = React.createClass({
     var translateX = this.state.scrollValue.interpolate({
       inputRange: [0, 1], outputRange: [0, -viewWidth]
     });
-
+    console.log(translateX);
+    console.log(this.childIndex);
     return (
       <View style={{flex: 1}}
         onLayout={(event) => {
